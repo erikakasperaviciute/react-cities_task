@@ -1,0 +1,36 @@
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+}
+
+.cities-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.capital h2 {
+    color: green
+}
+
+.city-card {
+    padding: 25px 20px;
+    width: calc(50% - 15px);
+}
+
+.city-card:nth-of-type(odd) {
+    background-color: #E1E1E1
+}
+
+.city-card li:first-of-type {
+    color: green
+}
+
+.city-card li:nth-child(n+4) {
+    color: red
+}
+
+.city-card:nth-child(odd):last-child {
+    width: 100%;
+}
