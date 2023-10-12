@@ -35,40 +35,50 @@ function AddCityForm({ addCity }) {
       <h3>Add new city</h3>
       <form onSubmit={handleSubmit}>
         <div className="form-control">
-          <label>City name:</label>
+          <label htmlFor="name">City name:</label>
           <input
+            id="name"
+            name="name"
             type="text"
             value={cityName}
             onChange={(e) => setCityName(e.target.value)}
           />
         </div>
         <div className="form-control">
-          <label>Population:</label>
+          <label htmlFor="population">Population:</label>
           <input
+            id="population"
+            name="population"
             type="number"
+            min={0}
+            step={1000}
             value={cityPopulation}
-            onChange={(e) => setCityPopulation(e.target.value)}
+            onChange={(e) => setCityPopulation(e.target.valueAsNumber)}
           />
         </div>
         <div className="form-control">
-          <label>Continent:</label>
+          <label htmlFor="continent">Continent:</label>
           <input
+            id="continent"
+            name="continent"
             type="text"
             value={cityContinent}
             onChange={(e) => setcityContinent(e.target.value)}
           />
         </div>
         <div className="form-control">
-          <label>Country:</label>
+          <label htmlFor="country">Country:</label>
           <input
+            id="country"
             type="text"
             value={cityCountry}
             onChange={(e) => setcityCountry(e.target.value)}
           />
         </div>
         <div className="form-control">
-          <label>Attractions:</label>
+          <label htmlFor="attractions">Attractions:</label>
           <textarea
+            id="attractions"
             value={cityAttractions}
             onChange={(e) => setcityAttractions(e.target.value)}
           />

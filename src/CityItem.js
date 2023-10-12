@@ -3,14 +3,13 @@ function CityItem(props) {
     props.data;
   const { continent, country } = location;
 
-  const cityNameTitle = `${name} ${isCapital ? "(capital)" : ""}`;
+  const cityNameTitle = isCapital ? `${name}(capital)` : name;
 
-  const cityDescription = `${name} city is located in ${continent}, ${country} and has population of
-        ${population} people.`;
+  const cityDescription = `${name} city is located in ${continent}, ${country} and has population of ${population} people.`;
 
-  const capitalAdditionalText = `${
-    isCapital ? `${name} is the capital of ${country}` : ""
-  }`;
+  const capitalAdditionalText = isCapital
+    ? `${name} is the capital of ${country}`
+    : "";
 
   const attractionSectionTitle =
     touristAttractions.length > 1 ? (
@@ -23,18 +22,20 @@ function CityItem(props) {
     <li key={index}>{attraction}</li>
   ));
 
+  const touristAttractionsElement = touristAttractions.length > 0 && (
+    <div className="attraction-wrapper">
+      {attractionSectionTitle}
+      <ul>{atractionElement}</ul>
+    </div>
+  );
+
   return (
     <div className={`city-card ${isCapital ? "capital" : ""}`}>
       <h2>{cityNameTitle}</h2>
 
       <p>{`${cityDescription} ${capitalAdditionalText}`}</p>
 
-      {touristAttractions.length > 0 && (
-        <div className="attraction-wrapper">
-          {attractionSectionTitle}
-          <ul>{atractionElement}</ul>
-        </div>
-      )}
+      {touristAttractionsElement}
     </div>
   );
 }
