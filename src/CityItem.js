@@ -49,6 +49,7 @@ function CityItem(props) {
     </div>
   );
   console.log(touristAttractions.length);
+  console.log(touristAttractions);
 
   return (
     <div className={`city-card ${isCapital ? "capital" : ""}`}>

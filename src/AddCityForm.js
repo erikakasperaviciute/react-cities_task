@@ -52,17 +52,16 @@ function AddCityForm({ addCity, editCity }) {
 
   const touristAttractionsInputHandler = (e) => {
     const enteredValue = e.target.value;
-    const touristAttractionsArr = enteredValue.split(",");
-    const updatedTouristAttractionsArr = touristAttractionsArr.map(
-      (location) => {
-        const trimmedLocation = location.trim();
-        const updatedLocation =
-          trimmedLocation.length > 0
-            ? trimmedLocation.at(0).toUpperCase() + trimmedLocation.slice(1)
-            : "";
-        return updatedLocation;
-      }
-    );
+    const updatedTouristAttractionsArr = enteredValue
+      ? enteredValue.split(",").map((location) => {
+          const trimmedLocation = location.trim();
+          const updatedLocation =
+            trimmedLocation.length > 0
+              ? trimmedLocation.at(0).toUpperCase() + trimmedLocation.slice(1)
+              : "";
+          return updatedLocation;
+        })
+      : [];
 
     setcityAttractions(updatedTouristAttractionsArr);
   };
