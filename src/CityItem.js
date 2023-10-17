@@ -12,6 +12,25 @@ function CityItem(props) {
     ? `${name} is the capital of ${country}`
     : "";
 
+  // let touristAttractionsElement = "";
+
+  // if (touristAttractions.length > 0) {
+  //   const touristAttractionsTitle =
+  //     touristAttractions.length === 1
+  //       ? `Main Tourist attraction of ${name} is:`
+  //       : `Main Tourist attractions of ${name} are:`;
+
+  //   touristAttractionsElement = (
+  //     <div className="tourist-attractions-wrapper">
+  //       <h3>{touristAttractionsTitle}</h3>
+  //       <ul>
+  //         {touristAttractions.map((location, index) => (
+  //           <li key={index}>{location}</li>
+  //         ))}
+  //       </ul>
+  //     </div>
+  //   );
+  // }
   const attractionSectionTitle =
     touristAttractions.length > 1 ? (
       <h3>Main Tourist attractions of {name} are:</h3>
@@ -29,6 +48,7 @@ function CityItem(props) {
       <ul>{atractionElement}</ul>
     </div>
   );
+  console.log(touristAttractions.length);
 
   return (
     <div className={`city-card ${isCapital ? "capital" : ""}`}>
