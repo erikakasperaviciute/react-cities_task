@@ -1,3 +1,4 @@
+import { v4 as uuid } from "uuid";
 import { useState } from "react";
 import CityItem from "./CityItem";
 import "./CitiesStyle.css";
@@ -5,6 +6,7 @@ import AddCityForm from "./AddCityForm";
 function CitiesPage() {
   const citiesArr = [
     {
+      id: uuid(),
       name: "Klaipėda",
       population: 162292,
       location: {
@@ -15,6 +17,7 @@ function CitiesPage() {
       isCapital: false,
     },
     {
+      id: uuid(),
       name: "Vilnius",
       population: 593436,
       location: {
@@ -30,6 +33,7 @@ function CitiesPage() {
       isCapital: true,
     },
     {
+      id: uuid(),
       name: "Valencia",
       population: 792492,
       location: {
@@ -43,6 +47,7 @@ function CitiesPage() {
       isCapital: false,
     },
     {
+      id: uuid(),
       name: "Barcelona",
       population: 1620343,
       location: {
@@ -58,6 +63,7 @@ function CitiesPage() {
       isCapital: false,
     },
     {
+      id: uuid(),
       name: "Kanbera",
       population: 456692,
       location: {
@@ -68,6 +74,7 @@ function CitiesPage() {
       isCapital: true,
     },
     {
+      id: uuid(),
       name: "Sydney",
       population: 5297089,
       location: {
@@ -78,6 +85,7 @@ function CitiesPage() {
       isCapital: false,
     },
     {
+      id: uuid(),
       name: "Berlin",
       population: 3850809,
       location: {
@@ -88,6 +96,7 @@ function CitiesPage() {
       isCapital: true,
     },
     {
+      id: uuid(),
       name: "Dallas",
       population: 1304379,
       location: {
@@ -98,6 +107,7 @@ function CitiesPage() {
       isCapital: false,
     },
     {
+      id: uuid(),
       name: "San Francisco",
       population: 815201,
       location: {
@@ -112,6 +122,7 @@ function CitiesPage() {
       isCapital: false,
     },
     {
+      id: uuid(),
       name: "Tokyo",
       population: 14094034,
       location: {
@@ -124,22 +135,56 @@ function CitiesPage() {
   ];
 
   const [cities, setCities] = useState(citiesArr);
+  const [editCity, setEditCity] = useState(null);
 
+  const removeCityHandler = (cityId) => {
+    setCities((prevCities) => prevCities.filter((city) => city.id !== cityId));
+  };
+
+  const editCityHandler = (cityId) => {
+    const cityToEdit = cities.find((city) => city.id === cityId);
+    setEditCity(cityToEdit);
+  };
   const citiesListElement = cities.map((city, index) => (
-    <CityItem key={index} data={city} />
+    <CityItem
+      key={index}
+      data={city}
+      onRemoveCity={removeCityHandler}
+      onEditCity={editCityHandler}
+    />
   ));
 
   const addCity = (newCity) => {
-    setCities((prevCities) => {
-      const newCities = [...prevCities];
-      newCities.unshift(newCity);
-      return newCities;
-    });
+    if (editCity) {
+      setCities((prevCities) => {
+        const editId = newCity.id;
+        const editIndex = cities.findIndex((city) => city.id === editId);
+        const newState = [...prevCities];
+        newState[editIndex] = newCity;
+        return newState;
+      });
+      setEditCity(null);
+    } else {
+      setCities((prevCities) => [newCity, ...prevCities]);
+    }
   };
+
+  // const addCity = (newCity) => {
+  //   setCities((prevCities) => {
+  //     //   const newCities = [...prevCities];
+  //     //   newCities.unshift(newCity);
+  //     //   return newCities;
+  //     // arba
+  //     // const newCities = [newCity, ...prevCities]
+  //     // return newCities
+  //     //arba. return čia nebūtinas
+  //     return [newCity, ...prevCities];
+  //   });
+  // };
 
   return (
     <>
-      <AddCityForm addCity={addCity} />
+      <AddCityForm addCity={addCity} editCity={editCity} />
       <div className="cities-wrap">{citiesListElement}</div>
     </>
   );

@@ -1,33 +1,70 @@
-import { useState } from "react";
+import { v4 as uuid } from "uuid";
+import { useState, useEffect } from "react";
 
-function AddCityForm({ addCity }) {
+function AddCityForm({ addCity, editCity }) {
   const [cityName, setCityName] = useState("");
   const [cityPopulation, setCityPopulation] = useState("");
   const [cityContinent, setcityContinent] = useState("");
   const [cityCountry, setcityCountry] = useState("");
-  const [cityAttractions, setcityAttractions] = useState("");
+  const [cityAttractions, setcityAttractions] = useState([]);
   const [isCapital, setIsCapital] = useState(false);
+  // const [isBeach, setIsBeach] = useState(false);
+  // const [isculturalAttractions, setIsculturalAttractions] = useState(false);
+
+  useEffect(() => {
+    if (editCity) {
+      setCityName(editCity.name);
+      setCityPopulation(editCity.population);
+      setcityContinent(editCity.location.continent);
+      setcityCountry(editCity.location.country);
+      setcityAttractions(editCity.touristAttractions);
+      setIsCapital(editCity.isCapital);
+    }
+  }, [editCity]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     addCity({
+      id: editCity ? editCity.id : uuid(),
       name: cityName,
       population: cityPopulation,
       location: {
         country: cityCountry,
         continent: cityContinent,
       },
-      touristAttractions: cityAttractions
-        .split(",")
-        .map((attraction) => attraction.trim()),
+      touristAttractions: cityAttractions,
       isCapital,
+      // isBeach,
     });
+    // console.log(cityContinent);
+    // console.log(cityAttractions.length);
+    // console.log(isBeach);
+
     setCityName("");
     setCityPopulation("");
     setcityContinent("");
     setcityCountry("");
     setcityAttractions("");
     setIsCapital(false);
+    // setIsBeach(false);
+    // setIsculturalAttractions(false);
+  };
+
+  const touristAttractionsInputHandler = (e) => {
+    const enteredValue = e.target.value;
+    const touristAttractionsArr = enteredValue.split(",");
+    const updatedTouristAttractionsArr = touristAttractionsArr.map(
+      (location) => {
+        const trimmedLocation = location.trim();
+        const updatedLocation =
+          trimmedLocation.length > 0
+            ? trimmedLocation.at(0).toUpperCase() + trimmedLocation.slice(1)
+            : "";
+        return updatedLocation;
+      }
+    );
+
+    setcityAttractions(updatedTouristAttractionsArr);
   };
 
   return (
@@ -51,7 +88,7 @@ function AddCityForm({ addCity }) {
             name="population"
             type="number"
             min={0}
-            step={1000}
+            // step={1000}
             value={cityPopulation}
             onChange={(e) => setCityPopulation(e.target.valueAsNumber)}
           />
@@ -70,6 +107,7 @@ function AddCityForm({ addCity }) {
           <label htmlFor="country">Country:</label>
           <input
             id="country"
+            name="country"
             type="text"
             value={cityCountry}
             onChange={(e) => setcityCountry(e.target.value)}
@@ -79,8 +117,9 @@ function AddCityForm({ addCity }) {
           <label htmlFor="attractions">Attractions:</label>
           <textarea
             id="attractions"
+            name="attractions"
             value={cityAttractions}
-            onChange={(e) => setcityAttractions(e.target.value)}
+            onChange={touristAttractionsInputHandler}
           />
         </div>
         <div className="form-control">
@@ -88,11 +127,49 @@ function AddCityForm({ addCity }) {
             id="capital"
             type="checkbox"
             checked={isCapital}
-            onChange={() => setIsCapital(!isCapital)}
+            //Šitaip negalima
+            // onChange={() => setIsCapital(!isCapital)}
+            onChange={() => setIsCapital((prevState) => !prevState)}
           />
           <label htmlFor="capital">Capital</label>
         </div>
-        <button type="submit">Add city</button>
+        {/* <fieldset>
+          <legend>City advantages</legend>
+          <label>
+            <input
+              type="checkbox"
+              name="features"
+              value="beach"
+              checked={isBeach}
+              onChange={() => setIsBeach(!isBeach)}
+            />
+            Beach
+          </label>
+          <label>
+            <input type="checkbox" name="features" value="metro" /> Metro
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="features"
+              value="cultural-attractions"
+              checked={isculturalAttractions}
+              onChange={() => setIsculturalAttractions(!isculturalAttractions)}
+            />
+            Cultural Attractions
+          </label>
+          <label>
+            <input type="checkbox" name="features" value="hiking" />
+            Hiking trails
+          </label>
+          <label>
+            <input type="checkbox" name="features" value="parks" />
+            Parks
+          </label>
+        </fieldset> */}
+        <button type="submit">
+          {editCity ? "Save edited city" : "Add new city"}
+        </button>
       </form>
     </div>
   );

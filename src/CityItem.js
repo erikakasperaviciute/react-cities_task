@@ -1,7 +1,8 @@
 function CityItem(props) {
-  const { name, population, location, touristAttractions, isCapital } =
+  const { name, population, location, touristAttractions, isCapital, id } =
     props.data;
   const { continent, country } = location;
+  const { onRemoveCity, onEditCity } = props;
 
   const cityNameTitle = isCapital ? `${name}(capital)` : name;
 
@@ -36,6 +37,8 @@ function CityItem(props) {
       <p>{`${cityDescription} ${capitalAdditionalText}`}</p>
 
       {touristAttractionsElement}
+      <button onClick={() => onRemoveCity(id)}>Delete</button>
+      <button onClick={() => onEditCity(id)}>Edit</button>
     </div>
   );
 }
