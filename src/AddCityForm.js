@@ -1,4 +1,3 @@
-import { v4 as uuid } from "uuid";
 import { useState, useEffect } from "react";
 
 function AddCityForm({ addCity, editCity }) {
@@ -6,7 +5,7 @@ function AddCityForm({ addCity, editCity }) {
   const [cityPopulation, setCityPopulation] = useState("");
   const [cityContinent, setcityContinent] = useState("");
   const [cityCountry, setcityCountry] = useState("");
-  const [cityAttractions, setcityAttractions] = useState([]);
+  const [cityAttractions, setCityAttractions] = useState([]);
   const [isCapital, setIsCapital] = useState(false);
   // const [isBeach, setIsBeach] = useState(false);
   // const [isculturalAttractions, setIsculturalAttractions] = useState(false);
@@ -17,7 +16,7 @@ function AddCityForm({ addCity, editCity }) {
       setCityPopulation(editCity.population);
       setcityContinent(editCity.location.continent);
       setcityCountry(editCity.location.country);
-      setcityAttractions(editCity.touristAttractions);
+      setCityAttractions(editCity.touristAttractions);
       setIsCapital(editCity.isCapital);
     }
   }, [editCity]);
@@ -25,7 +24,6 @@ function AddCityForm({ addCity, editCity }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     addCity({
-      id: editCity ? editCity.id : uuid(),
       name: cityName,
       population: cityPopulation,
       location: {
@@ -44,26 +42,45 @@ function AddCityForm({ addCity, editCity }) {
     setCityPopulation("");
     setcityContinent("");
     setcityCountry("");
-    setcityAttractions("");
+    setCityAttractions([]);
     setIsCapital(false);
     // setIsBeach(false);
     // setIsculturalAttractions(false);
   };
 
-  const touristAttractionsInputHandler = (e) => {
-    const enteredValue = e.target.value;
-    const updatedTouristAttractionsArr = enteredValue
-      ? enteredValue.split(",").map((location) => {
-          const trimmedLocation = location.trim();
-          const updatedLocation =
-            trimmedLocation.length > 0
-              ? trimmedLocation.at(0).toUpperCase() + trimmedLocation.slice(1)
-              : "";
-          return updatedLocation;
-        })
-      : [];
+  // const touristAttractionsInputHandler = (e) => {
+  //   const enteredValue = e.target.value;
+  //   const updatedTouristAttractionsArr = enteredValue
+  //     ? enteredValue.split(",").map((location) => {
+  //         const trimmedLocation = location.trim();
+  //         const updatedLocation =
+  //           trimmedLocation.length > 0
+  //             ? trimmedLocation.at(0).toUpperCase() + trimmedLocation.slice(1)
+  //             : "";
+  //         return updatedLocation;
+  //       })
+  //     : [];
 
-    setcityAttractions(updatedTouristAttractionsArr);
+  //   setcityAttractions(updatedTouristAttractionsArr);
+  // };
+  const touristAttractionsInputHandler = (event) => {
+    const enteredValue = event.target.value;
+    if (!enteredValue) {
+      setCityAttractions([]);
+      return;
+    }
+    const touristAttractionsArr = enteredValue.split(",");
+    const updatedTouristAttractionsArr = touristAttractionsArr.map(
+      (location) => {
+        const trimmedLocation = location.trim();
+        const updatedLocation =
+          trimmedLocation.length > 0
+            ? trimmedLocation.at(0).toUpperCase() + trimmedLocation.slice(1)
+            : "";
+        return updatedLocation;
+      }
+    );
+    setCityAttractions(updatedTouristAttractionsArr);
   };
 
   return (
@@ -117,7 +134,7 @@ function AddCityForm({ addCity, editCity }) {
           <textarea
             id="attractions"
             name="attractions"
-            value={cityAttractions}
+            value={cityAttractions.join(", ")}
             onChange={touristAttractionsInputHandler}
           />
         </div>

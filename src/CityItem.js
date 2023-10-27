@@ -12,8 +12,25 @@ function CityItem(props) {
     ? `${name} is the capital of ${country}`
     : "";
 
-  // let touristAttractionsElement = "";
+  let touristAttractionsElement = "";
 
+  if (touristAttractions.length > 0) {
+    const touristAttractionsTitle =
+      touristAttractions.length === 1
+        ? `Main Tourist attraction of ${name} is:`
+        : `Main Tourist attractions of ${name} are:`;
+
+    touristAttractionsElement = (
+      <div className="tourist-attractions-wrapper">
+        <h3>{touristAttractionsTitle}</h3>
+        <ul>
+          {touristAttractions.map((location, index) => (
+            <li key={index}>{location}</li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
   // if (touristAttractions.length > 0) {
   //   const touristAttractionsTitle =
   //     touristAttractions.length === 1
@@ -31,23 +48,23 @@ function CityItem(props) {
   //     </div>
   //   );
   // }
-  const attractionSectionTitle =
-    touristAttractions.length > 1 ? (
-      <h3>Main Tourist attractions of {name} are:</h3>
-    ) : (
-      <h3>Main Tourist attraction of {name} is:</h3>
-    );
+  // const attractionSectionTitle =
+  //   touristAttractions.length > 1 ? (
+  //     <h3>Main Tourist attractions of {name} are:</h3>
+  //   ) : (
+  //     <h3>Main Tourist attraction of {name} is:</h3>
+  //   );
 
-  const atractionElement = touristAttractions.map((attraction, index) => (
-    <li key={index}>{attraction}</li>
-  ));
+  // const atractionElement = touristAttractions.map((attraction, index) => (
+  //   <li key={index}>{attraction}</li>
+  // ));
 
-  const touristAttractionsElement = touristAttractions.length > 0 && (
-    <div className="attraction-wrapper">
-      {attractionSectionTitle}
-      <ul>{atractionElement}</ul>
-    </div>
-  );
+  // const touristAttractionsElement = touristAttractions.length > 0 && (
+  //   <div className="attraction-wrapper">
+  //     {attractionSectionTitle}
+  //     <ul>{atractionElement}</ul>
+  //   </div>
+  // );
   console.log(touristAttractions.length);
   console.log(touristAttractions);
 
