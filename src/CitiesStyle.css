@@ -34,3 +34,19 @@
 .city-card:nth-child(odd):last-child {
     width: 100%;
 }
+
+.city-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    gap: 10px
+}
+
+.form-control {
+    display: flex;
+    flex-direction: column;
+}
+
+.error-message {
+    color: red;
+}

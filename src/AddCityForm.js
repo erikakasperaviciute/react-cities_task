@@ -11,6 +11,11 @@ function AddCityForm({ addCity, editCity }) {
   const [isCapital, setIsCapital] = useState(false);
   const [continentOptions, setContinentOptions] = useState([]);
 
+  const [nameError, setNameError] = useState("");
+  const [populationError, setPopulationError] = useState(false);
+  const [countryError, setCountryError] = useState("");
+  const [invalidForm, setInvalidForm] = useState(false);
+
   useEffect(() => {
     const getContinents = async () => {
       const { data } = await axios(`${API_URL}/continents`);
@@ -34,6 +39,40 @@ function AddCityForm({ addCity, editCity }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    setNameError("");
+    setPopulationError(false);
+    setCountryError("");
+    setInvalidForm(false);
+
+    let formIsValid = true;
+
+    if (!cityName) {
+      setNameError("Name is required");
+      formIsValid = false;
+    } else if (cityName.length < 3) {
+      setNameError("Name must be at least 3 characters long");
+      formIsValid = false;
+    }
+
+    if (cityPopulation < 50) {
+      setPopulationError(true);
+      formIsValid = false;
+    }
+
+    if (!cityCountry) {
+      setCountryError("Country is required");
+      formIsValid = false;
+    } else if (cityCountry.length < 3) {
+      setCountryError("Country must be at least 3 characters long");
+      formIsValid = false;
+    }
+
+    if (!formIsValid) {
+      setInvalidForm(true);
+      return;
+    }
+
     addCity({
       name: cityName,
       population: cityPopulation,
@@ -74,7 +113,7 @@ function AddCityForm({ addCity, editCity }) {
   return (
     <div>
       <h3>Add new city</h3>
-      <form onSubmit={handleSubmit}>
+      <form className="city-form" onSubmit={handleSubmit}>
         <div className="form-control">
           <label htmlFor="name">City name:</label>
           <input
@@ -84,6 +123,7 @@ function AddCityForm({ addCity, editCity }) {
             value={cityName}
             onChange={(e) => setCityName(e.target.value)}
           />
+          {nameError && <span className="error-message">{nameError}</span>}
         </div>
         <div className="form-control">
           <label htmlFor="population">Population:</label>
@@ -92,10 +132,15 @@ function AddCityForm({ addCity, editCity }) {
             name="population"
             type="number"
             min={0}
-            // step={1000}
+            step={1}
             value={cityPopulation}
             onChange={(e) => setCityPopulation(e.target.valueAsNumber)}
           />
+          {populationError && (
+            <span className="error-message">
+              Population has to be at least 50 people
+            </span>
+          )}
         </div>
         <div className="form-control">
           <label htmlFor="continent">Continent:</label>
@@ -131,6 +176,9 @@ function AddCityForm({ addCity, editCity }) {
             value={cityCountry}
             onChange={(e) => setcityCountry(e.target.value)}
           />
+          {countryError && (
+            <span className="error-message">{countryError}</span>
+          )}
         </div>
         <div className="form-control">
           <label htmlFor="attractions">Attractions:</label>
@@ -141,7 +189,7 @@ function AddCityForm({ addCity, editCity }) {
             onChange={touristAttractionsInputHandler}
           />
         </div>
-        <div className="form-control">
+        <div className="form-control-inline">
           <input
             id="capital"
             type="checkbox"
@@ -154,6 +202,13 @@ function AddCityForm({ addCity, editCity }) {
         <button type="submit">
           {editCity ? "Save edited city" : "Add new city"}
         </button>
+        {invalidForm && (
+          <div className="error-wrapper">
+            <span className="error-message">
+              Not all required data has been entered.
+            </span>
+          </div>
+        )}
       </form>
     </div>
   );
