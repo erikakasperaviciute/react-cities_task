@@ -1,4 +1,3 @@
-// import { v4 as uuid } from "uuid";
 import { useState, useEffect } from "react";
 import CityItem from "./CityItem";
 import "./CitiesStyle.css";
@@ -142,7 +141,7 @@ function CitiesPage() {
 
   useEffect(() => {
     const getCities = async () => {
-      const { data } = await axios(`${API_URL}/cities`);
+      const { data } = await axios(`${API_URL}/cities?_expand=continent`);
       setCities(data);
     };
     getCities();
@@ -150,9 +149,9 @@ function CitiesPage() {
 
   const addCity = async (newCity) => {
     if (editCity) {
-      const { data } = await axios.put(
-        `${API_URL}/cities/${editCity.id}`,
-        newCity
+      await axios.put(`${API_URL}/cities/${editCity.id}`, newCity);
+      const { data } = await axios(
+        `${API_URL}/cities/${editCity.id}?_expand=continent`
       );
       setCities((prevCities) => {
         const editId = editCity.id;
@@ -164,8 +163,10 @@ function CitiesPage() {
       setEditCity(null);
     } else {
       const { data } = await axios.post(`${API_URL}/cities`, newCity);
-      setCities((prevCities) => [data, ...prevCities]);
-      // setCities((prevCities) => [newCity, ...prevCities]);
+      const cityRes = await axios(
+        `${API_URL}/cities/${data.id}?_expand=continent`
+      );
+      setCities((prevCities) => [cityRes.data, ...prevCities]);
     }
   };
 

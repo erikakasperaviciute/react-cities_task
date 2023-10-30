@@ -1,21 +1,32 @@
 import { useState, useEffect } from "react";
+import axios from "axios";
+import { API_URL } from "./config";
 
 function AddCityForm({ addCity, editCity }) {
   const [cityName, setCityName] = useState("");
   const [cityPopulation, setCityPopulation] = useState("");
-  const [cityContinent, setcityContinent] = useState("");
+  const [continent, setContinent] = useState("");
   const [cityCountry, setcityCountry] = useState("");
   const [cityAttractions, setCityAttractions] = useState([]);
   const [isCapital, setIsCapital] = useState(false);
-  // const [isBeach, setIsBeach] = useState(false);
-  // const [isculturalAttractions, setIsculturalAttractions] = useState(false);
+  const [continentOptions, setContinentOptions] = useState([]);
+
+  useEffect(() => {
+    const getContinents = async () => {
+      const { data } = await axios(`${API_URL}/continents`);
+      setContinentOptions(data);
+      setContinent(data[0].id);
+    };
+
+    getContinents();
+  }, []);
 
   useEffect(() => {
     if (editCity) {
       setCityName(editCity.name);
       setCityPopulation(editCity.population);
-      setcityContinent(editCity.location.continent);
-      setcityCountry(editCity.location.country);
+      setContinent(editCity.continentId);
+      setcityCountry(editCity.country);
       setCityAttractions(editCity.touristAttractions);
       setIsCapital(editCity.isCapital);
     }
@@ -26,43 +37,20 @@ function AddCityForm({ addCity, editCity }) {
     addCity({
       name: cityName,
       population: cityPopulation,
-      location: {
-        country: cityCountry,
-        continent: cityContinent,
-      },
+      country: cityCountry,
+      continentId: Number(continent),
       touristAttractions: cityAttractions,
       isCapital,
-      // isBeach,
     });
-    // console.log(cityContinent);
-    // console.log(cityAttractions.length);
-    // console.log(isBeach);
 
     setCityName("");
     setCityPopulation("");
-    setcityContinent("");
+    setContinent(continentOptions[0].id);
     setcityCountry("");
     setCityAttractions([]);
     setIsCapital(false);
-    // setIsBeach(false);
-    // setIsculturalAttractions(false);
   };
 
-  // const touristAttractionsInputHandler = (e) => {
-  //   const enteredValue = e.target.value;
-  //   const updatedTouristAttractionsArr = enteredValue
-  //     ? enteredValue.split(",").map((location) => {
-  //         const trimmedLocation = location.trim();
-  //         const updatedLocation =
-  //           trimmedLocation.length > 0
-  //             ? trimmedLocation.at(0).toUpperCase() + trimmedLocation.slice(1)
-  //             : "";
-  //         return updatedLocation;
-  //       })
-  //     : [];
-
-  //   setcityAttractions(updatedTouristAttractionsArr);
-  // };
   const touristAttractionsInputHandler = (event) => {
     const enteredValue = event.target.value;
     if (!enteredValue) {
@@ -75,7 +63,7 @@ function AddCityForm({ addCity, editCity }) {
         const trimmedLocation = location.trim();
         const updatedLocation =
           trimmedLocation.length > 0
-            ? trimmedLocation.at(0).toUpperCase() + trimmedLocation.slice(1)
+            ? trimmedLocation.charAt(0).toUpperCase() + trimmedLocation.slice(1)
             : "";
         return updatedLocation;
       }
@@ -111,14 +99,29 @@ function AddCityForm({ addCity, editCity }) {
         </div>
         <div className="form-control">
           <label htmlFor="continent">Continent:</label>
+          <select
+            id="continent"
+            name="continent"
+            value={continent}
+            onChange={(e) => setContinent(e.target.value)}
+          >
+            {continentOptions.map((continent) => (
+              <option value={continent.id} key={continent.id}>
+                {continent.title}
+              </option>
+            ))}
+          </select>
+        </div>
+        {/* <div className="form-control">
+          <label htmlFor="continent">Continent:</label>
           <input
             id="continent"
             name="continent"
             type="text"
-            value={cityContinent}
-            onChange={(e) => setcityContinent(e.target.value)}
+            value={cityContinents}
+            onChange={(e) => setcityContinents(e.target.value)}
           />
-        </div>
+        </div> */}
         <div className="form-control">
           <label htmlFor="country">Country:</label>
           <input
@@ -143,46 +146,11 @@ function AddCityForm({ addCity, editCity }) {
             id="capital"
             type="checkbox"
             checked={isCapital}
-            //Šitaip negalima
-            // onChange={() => setIsCapital(!isCapital)}
             onChange={() => setIsCapital((prevState) => !prevState)}
           />
           <label htmlFor="capital">Capital</label>
         </div>
-        {/* <fieldset>
-          <legend>City advantages</legend>
-          <label>
-            <input
-              type="checkbox"
-              name="features"
-              value="beach"
-              checked={isBeach}
-              onChange={() => setIsBeach(!isBeach)}
-            />
-            Beach
-          </label>
-          <label>
-            <input type="checkbox" name="features" value="metro" /> Metro
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              name="features"
-              value="cultural-attractions"
-              checked={isculturalAttractions}
-              onChange={() => setIsculturalAttractions(!isculturalAttractions)}
-            />
-            Cultural Attractions
-          </label>
-          <label>
-            <input type="checkbox" name="features" value="hiking" />
-            Hiking trails
-          </label>
-          <label>
-            <input type="checkbox" name="features" value="parks" />
-            Parks
-          </label>
-        </fieldset> */}
+
         <button type="submit">
           {editCity ? "Save edited city" : "Add new city"}
         </button>

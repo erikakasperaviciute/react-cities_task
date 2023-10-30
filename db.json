@@ -1,3 +1,46 @@
 {
-  "cities": []
+  "cities": [
+    {
+      "name": "Klaipėda",
+      "population": 162292,
+      "country": "Lithuania",
+      "continentId": 1,
+      "touristAttractions": [
+        "The Magic Mouse sculpture",
+        "Theatre Square"
+      ],
+      "isCapital": false,
+      "id": 3
+    }
+  ],
+  "continents": [
+    {
+      "id": 1,
+      "title": "Europe"
+    },
+    {
+      "id": 2,
+      "title": "North America"
+    },
+    {
+      "id": 3,
+      "title": "South America"
+    },
+    {
+      "id": 4,
+      "title": "Austalia"
+    },
+    {
+      "id": 5,
+      "title": "Asia"
+    },
+    {
+      "id": 6,
+      "title": "Africa"
+    },
+    {
+      "id": 7,
+      "title": "Antarctica"
+    }
+  ]
 }
